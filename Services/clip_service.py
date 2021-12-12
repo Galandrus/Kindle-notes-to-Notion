@@ -1,4 +1,5 @@
-from Services.notion_service import NotionService
+"""Module to use notion service"""
+from services.notion_service import NotionService
 
 CLIP_SEPARATOR = '=========='
 HIGHLIGHT_IDENTIFIER = '- La subrayado'
@@ -7,35 +8,42 @@ HIGHLIGHT_TYPE = 'Highlight'
 NOTE_TYPE = 'Note'
 MARK_TYPE = 'Mark'
 
+
 class ClipService():
+    """Class to process notes"""
     notion_service: NotionService = NotImplemented
 
     def __init__(self, notion_service):
         self.notion_service = notion_service
 
-    def getNotes(self, fileContent):
-        notes = fileContent.split(CLIP_SEPARATOR)
+    def get_notes(self, file_content):
+        """Function to get separated notes from the content of a file"""
+        notes = file_content.split(CLIP_SEPARATOR)
         return notes
 
-
-    def processNotes(self, notes):
-        unprocessedNotes = []
+    def process_notes(self, notes):
+        """Function to process the notes and post to notion"""
+        unprocessed_notes = []
 
         for note in notes:
-            filerNote =  list(filter(None, note.splitlines()))
-            book = filerNote[0]
-            context = filerNote[1]
+            filer_note = list(filter(None, note.splitlines()))
+            book = filer_note[0]
+            context = filer_note[1]
 
-            if context.startswith(HIGHLIGHT_IDENTIFIER): clipType = HIGHLIGHT_TYPE
-            elif context.startswith(NOTE_IDENTIFIER): clipType = NOTE_TYPE
+            if context.startswith(HIGHLIGHT_IDENTIFIER):
+                clip_type = HIGHLIGHT_TYPE
+            elif context.startswith(NOTE_IDENTIFIER):
+                clip_type = NOTE_TYPE
             else:
                 print('Mark Clip - Not processed')
-                unprocessedNotes.append(note)
+                unprocessed_notes.append(note)
                 continue
 
-            clip = filerNote[2]
+            clip = filer_note[2]
 
-            response = self.notion_service.postNoteToNotion(book, clip, clipType)
-            if not response: unprocessedNotes.append(note)
+            response = self.notion_service.postNoteToNotion(
+                book, clip, clip_type)
+            if not response:
+                unprocessed_notes.append(note)
 
-        return unprocessedNotes
+        return unprocessed_notes
