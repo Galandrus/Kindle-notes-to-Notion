@@ -1,4 +1,4 @@
-"""Module to use notion service"""
+"""Module Clip Services to process clips"""
 from services.notion_service import NotionService
 
 CLIP_SEPARATOR = '=========='
@@ -7,6 +7,7 @@ NOTE_IDENTIFIER = '- La nota'
 HIGHLIGHT_TYPE = 'Highlight'
 NOTE_TYPE = 'Note'
 MARK_TYPE = 'Mark'
+REFERENCE_SPLIT = '| Añadido'
 
 
 class ClipService():
@@ -16,7 +17,8 @@ class ClipService():
     def __init__(self, notion_service):
         self.notion_service = notion_service
 
-    def get_notes(self, file_content):
+    @staticmethod
+    def get_notes(file_content):
         """Function to get separated notes from the content of a file"""
         notes = file_content.split(CLIP_SEPARATOR)
         return notes
@@ -39,10 +41,11 @@ class ClipService():
                 unprocessed_notes.append(note)
                 continue
 
+            reference = context.split(REFERENCE_SPLIT)[0]
             clip = filer_note[2]
 
-            response = self.notion_service.postNoteToNotion(
-                book, clip, clip_type)
+            response = self.notion_service.post_clip_to_notion(
+                book, reference, clip, clip_type)
             if not response:
                 unprocessed_notes.append(note)
 

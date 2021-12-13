@@ -1,4 +1,4 @@
-"""Module to use datetime"""
+"""Module File System Service to interact whit files"""
 from datetime import datetime
 
 

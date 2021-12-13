@@ -1,4 +1,4 @@
-"""Module to do request"""
+"""Module Notion Service to interact with Notion API"""
 from requests.structures import CaseInsensitiveDict
 import requests
 
@@ -25,7 +25,7 @@ class NotionService():
             }
         }
 
-    def post_clip_to_notion(self, book, clip, clip_type):
+    def post_clip_to_notion(self, book, reference, clip, clip_type):
         """Function to post clips into a notion page"""
         url = f"https://api.notion.com/v1/blocks/{self.page_id}/children"
         headers = CaseInsensitiveDict()
@@ -41,6 +41,8 @@ class NotionService():
                         "text": [
                             self.notion_text('Book: ', True),
                             self.notion_text(book),
+                            self.notion_text('\nReference: ', True),
+                            self.notion_text(reference),
                             self.notion_text(f'\n{clip_type}: ', True),
                             self.notion_text(clip)
                         ],
