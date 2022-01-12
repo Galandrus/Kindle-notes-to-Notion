@@ -1,13 +1,14 @@
 """Module File System Service to interact whit files"""
 from datetime import datetime
 
-
 class FileSystemService():
     """Class with function about file functions"""
     clip_path = ''
+    project_path = ''
 
-    def __init__(self, clip_path):
+    def __init__(self, clip_path, project_path):
         self.clip_path = clip_path
+        self.project_path = project_path
 
     def get_file_content(self):
         """Function to get the content of a file"""
@@ -18,7 +19,8 @@ class FileSystemService():
     def backup_file(self, file_content):
         """Function to save the file content in other file"""
         date = datetime.now().strftime("%d-%m-%Y -- %H-%M-%S")
-        with open(f'./backups/backup-note-{date}', 'w', encoding='utf8') as file:
+        backup_file_path =  self.project_path + f'/backups/backup-note-{date}'
+        with open(backup_file_path, 'w', encoding='utf8') as file:
             file.write(file_content)
         print('File was cloned')
 

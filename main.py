@@ -1,5 +1,6 @@
 """Module Main"""
 import json
+import os.path
 from services.file_system_service import FileSystemService
 from services.notion_service import NotionService
 from services.clip_service import ClipService
@@ -12,11 +13,12 @@ CONFIG = {
     NOTION_SECRET_TOKEN: "",
     NOTION_MAIN_PAGE_ID: ""
 }
-
+PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 def load_config():
     """Function load config variables"""
-    with open('config.json', 'r') as file:
+    config_file_path = PROJECT_PATH + '/config.json'
+    with open(config_file_path, 'r') as file:
         config = json.load(file)
     CONFIG[CLIP_PATH] = config[CLIP_PATH]
     CONFIG[NOTION_SECRET_TOKEN] = config[NOTION_SECRET_TOKEN]
@@ -26,7 +28,7 @@ def load_config():
 def main():
     """Main program"""
     load_config()
-    file_system_service = FileSystemService(CONFIG[CLIP_PATH])
+    file_system_service = FileSystemService(CONFIG[CLIP_PATH], PROJECT_PATH)
     notion_service = NotionService(
         CONFIG[NOTION_SECRET_TOKEN], CONFIG[NOTION_MAIN_PAGE_ID])
     clip_service = ClipService(notion_service)
